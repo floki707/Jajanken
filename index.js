@@ -1,4 +1,10 @@
-// first function converts computerChoice variable into computerText---
+let playerScore = 0;
+let computerScore = 0;
+
+const roundResultUi = document.querySelector("#round-result");
+const runningScoreUi = document.querySelector("#running-score");
+const finalScoreUi = document.querySelector("#final-score");
+
 function computerRound(computerChoice) {
   let computerChoiceText;
   if (computerChoice === 0) {
@@ -27,56 +33,46 @@ function compare(computerText, playerChoice) {
   }
 }
 
-function game() {
-  let playerScore = 0;
-  let computerScore = 0;
+function playRound(playerChoice) {
+  if(playerScore === 5 || computerScore ===5) return;
 
-  // A loop to run exactly 5 rounds
-  for (let round = 1; round <= 5; round++) {
-    // Safely handle the prompt inside the loop
-    const initialPlayerChoice = prompt("Rock, Paper, Scissors GO!");
+  const computerChoice = Math.floor(Math.random() * 3);
+  const computerText = computerRound(computerChoice);
+  const result = compare(computerText, playerChoice);
+  console.log(result);
 
-    // If user clicks cancel or inputs nothing, skip this round safely
-    if (!initialPlayerChoice) {
-      console.log("no input SKIPED ROUND.");
-      continue;
-    }
-
-    let playerChoice = initialPlayerChoice.toLowerCase();
-    const computerChoice = Math.floor(Math.random() * 3);
-    const computerText = computerRound(computerChoice);
-    console.log("Your Choice: " + playerChoice);
-    console.log("The computer's choice: " + computerText);
-    console.log(compare(computerText, playerChoice));
-    console.log("End of Round: " + round);
-    const result = compare(computerText, playerChoice);
-
-//If user wins playerscore+1, if computer wins computerscore+1, no points if tie.
-    if(result === "WIN!"){
-      playerScore++;
-      console.log("great You WON the round");}
-
-      else if(result === "LOOSE!"){
-        computerScore++;
-        console.log("Sorry you LOST!");}
-        else{
-          console.log("Tie No points!")
-        }
-        console.log(`Your Score:  ${playerScore} --- Computer Score:  ${computerScore}`);
-        console.log("===================================");   
+  //If user wins playerscore+1, if computer wins computerscore+1, no points if tie.
+  if (result === "WIN!") {
+    playerScore++;
+    roundResultUi.textContent = `you won the round you choose ${playerChoice} y la computadora eligió ${computerText}.`;
+  } else if (result === "LOOSE!") {
+    computerScore++;
+    roundResultUi.textContent = `you lost the round you choose ${playerChoice} y la computadora eligió ${computerText}.`;
+  } else {
+    roundResultUi.textContent = `¡Empate! Ambos eligieron ${playerChoice}.`;
   }
-  console.log("============GAME-OVER==============");
-  console.log("FINAL SCORE:");
-  console.log(`Your Score: ${playerScore} ----- Computer Score: ${computerScore}`);
+  runningScoreUi.textContent = `Your Score: ${playerScore} ______ Computer Score: ${computerScore}`;
 
-  if(playerScore > computerScore){
-    console.log("YOU WON THE GAME");
+  if(playerScore ===5){
+    finalScoreUi.textContent= "You won the game!"
   }
-  else if(playerScore < computerScore){
-    console.log("COMPUTER WON THE GAME");
-  }
-  else{
-    console.log("ITS A TIE");
+  else if (computerScore=== 5){
+    finalScoreUi.textContent= "Sorry The computer won the game :("
   }
 }
-game();
+
+const rockBtn = document.querySelector("#rock");
+const paperBtn = document.querySelector("#paper");
+const scissorsBtn = document.querySelector("#scissors");
+
+rockBtn.addEventListener("click", () => {
+  playRound("rock");
+});
+
+paperBtn.addEventListener("click", () => {
+  playRound("paper");
+});
+
+scissorsBtn.addEventListener("click", () => {
+  playRound("scissors");
+});
